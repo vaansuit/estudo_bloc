@@ -46,40 +46,59 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'You have pushed the button this many times:',
-          ),
-          BlocBuilder<CounterCubit, CounterState>(
-            builder: (context, state) {
-              return Text(
-                state.counterValue.toString(),
-                style: Theme.of(context).textTheme.headlineMedium,
-              );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                tooltip: "Increment",
-                onPressed: () {
-                  BlocProvider.of<CounterCubit>(context).increment();
-                },
-                child: const Icon(Icons.add),
+      body: BlocListener<CounterCubit, CounterState>(
+        listener: (context, state) {
+          if (state.wasIncremented == true) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Incrementado'),
+                duration: Duration(microseconds: 300),
               ),
-              FloatingActionButton(
-                tooltip: "Decrement",
-                onPressed: () {
-                  BlocProvider.of<CounterCubit>(context).decrement();
-                },
-                child: const Icon(Icons.remove),
+            );
+          } else if (state.wasIncremented == false) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Decrementado'),
+                duration: Duration(microseconds: 300),
               ),
-            ],
-          )
-        ],
+            );
+          }
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            BlocBuilder<CounterCubit, CounterState>(
+              builder: (context, state) {
+                return Text(
+                  state.counterValue.toString(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  tooltip: "Increment",
+                  onPressed: () {
+                    BlocProvider.of<CounterCubit>(context).increment();
+                  },
+                  child: const Icon(Icons.add),
+                ),
+                FloatingActionButton(
+                  tooltip: "Decrement",
+                  onPressed: () {
+                    BlocProvider.of<CounterCubit>(context).decrement();
+                  },
+                  child: const Icon(Icons.remove),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
